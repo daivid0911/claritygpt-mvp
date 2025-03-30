@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const input = document.getElementById("input");
-  const button = document.getElementById("run-gpt");
+  const input = document.getElementById("userInput"); // ← id 이름 맞춰줌!
+  const button = document.getElementById("submit");   // ← 여기도 수정
   const result = document.getElementById("result");
 
   button.addEventListener("click", async () => {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: userInput, // ✅ 서버와 정확히 매칭되는 key
+          message: userInput,
         }),
       });
 
@@ -37,3 +37,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
