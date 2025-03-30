@@ -21,7 +21,8 @@ submitBtn.addEventListener("click", async () => {
     });
 
     const data = await response.json();
-    resultDiv.innerText = data.result || "응답을 받지 못했습니다.";
+    resultDiv.innerText = data.message || "응답을 받지 못했습니다.";
+
   } catch (error) {
     resultDiv.innerText = "오류 발생: " + error.message;
   }
