@@ -1,30 +1,39 @@
-const resultDiv = document.getElementById("result");
-const submitBtn = document.getElementById("submit");
-const inputField = document.getElementById("userInput");
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("input");
+  const button = document.getElementById("run-gpt");
+  const result = document.getElementById("result");
 
-submitBtn.addEventListener("click", async () => {
-  const userInput = inputField.value.trim();
-  if (!userInput) {
-    resultDiv.innerText = "내용을 입력해주세요.";
-    return;
-  }
+  button.addEventListener("click", async () => {
+    const userInput = input.value;
 
-  resultDiv.innerText = "ClarityGPT가 분석 중입니다... 🧠";
+    if (!userInput) {
+      result.textContent = "입력값이 없습니다.";
+      return;
+    }
 
-  try {
-    const response = await fetch("/api/gpt", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt: userInput }),
-    });
+    result.textContent = "GPT 응답 생성 중...";
 
-    const data = await response.json();
-   resultDiv.innerText = data.message || "응답을 받지 못했습니다.";
+    try {
+      const response = await fetch("/api/gpt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userInput, // ✅ 서버와 정확히 매칭되는 key
+        }),
+      });
 
+      const data = await response.json();
 
-  } catch (error) {
-    resultDiv.innerText = "오류 발생: " + error.message;
-  }
+      if (response.ok) {
+        const reply = data.choices?.[0]?.message?.content || "응답 없음";
+        result.textContent = reply;
+      } else {
+        result.textContent = `에러: ${data.error?.message || "응답 실패"}`;
+      }
+    } catch (err) {
+      result.textContent = `요청 실패: ${err.message}`;
+    }
+  });
 });
